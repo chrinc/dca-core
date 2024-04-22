@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dca-core-deployment
+  labels:
+    app: dca-core
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dca-core
+  template:
+    metadata:
+      labels:
+        app: dca-core
+    spec:
+      containers:
+        - name: dca-ora
+          image: zeus522/dca-core-dev:1.1
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 8080
+          imagePullPolicy: Always
+          env:
+            - name: DCA_ORA_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: dca-configmap
+                  key: database_url
+            - name: DCA_ORA_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: dca-ora-secret
+                  key: dca-ora-app-username
+            - name: DCA_ORA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: dca-ora-secret
+                  key: dca-ora-app-password
+      imagePullSecrets:
+        - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dca-core-service
+  labels:
+    app: dca-core
+spec:
+  type: LoadBalancer
+  selector:
+    app: demo-app-spring
+  ports:
+    - protocol: TCP
+      name: http
+      port: 8080
+      targetPort: 8080
+      nodePort: 30000

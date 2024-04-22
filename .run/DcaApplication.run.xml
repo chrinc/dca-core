@@ -1,0 +1,14 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="DcaApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <option name="ACTIVE_PROFILES" />
+    <module name="dca-core" />
+    <option name="PROGRAM_PARAMETERS" value="--DCA_ORA_USERNAME=k --DCA_ORA_PASSWORD=k --DCA_ORA_URL=127.0.0.1" />
+    <selectedOptions>
+      <option name="vmParameters" visible="false" />
+    </selectedOptions>
+    <option name="SPRING_BOOT_MAIN_CLASS" value="ch.dca.dcacore.DcaApplication" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

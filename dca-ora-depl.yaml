@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dca-ora-deployment
+  labels:
+    app: dca-ora
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dca-ora
+  template:
+    metadata:
+      labels:
+        app: dca-ora
+    spec:
+      containers:
+        - name: dca-ora
+          image: zeus522/dca:1.0
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 1521
+          env:
+            - name: ORACLE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: dca-ora-secret
+                  key: dca-ora-root-password
+            - name: APP_USER
+              valueFrom:
+                secretKeyRef:
+                  name: dca-ora-secret
+                  key: dca-ora-app-username
+            - name: APP_USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: dca-ora-secret
+                  key: dca-ora-app-password
+      imagePullSecrets:
+        - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dca-ora-service
+spec:
+  selector:
+    app: dca-ora
+  ports:
+    - protocol: TCP
+      port: 1521
+      targetPort: 1521
+
+#---
+#kind: Endpoints
+#apiVersion: v1
+#metadata:
+#  name: dca-ora-service
+#subsets:
+#  - addresses:
+#      - ip: 10.244.0.15
+#    ports:
+#      - port: 1521
